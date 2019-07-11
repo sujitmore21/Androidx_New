@@ -15,21 +15,35 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val app = application as PhotoApp
+
         val appPrefs = getSharedPreferences("my_prefs", Context.MODE_PRIVATE)
         val actPrefs = getPreferences(Context.MODE_PRIVATE)
 
         btShRd.setOnClickListener {
-            //  readFromSharedPrefs(appPrefs)
-            //  readFromInternalStorage()
-            //  readFromPrivateExternalStorage()
-            readFromPublicExternalStorage()
+            //readFromSharedPrefs(appPrefs)
+            //readFromInternalStorage()
+            //readFromPrivateExternalStorage()
+            //readFromPublicExternalStorage()
+
+            Thread {
+                app.db.photoDao().allPhotos().forEach { ph ->
+                    Log.i("@codekul", "Photo credits to ${ph.pc}")
+                }
+            }.start()
         }
 
         btShWr.setOnClickListener {
             // writeToSharedPrefs(appPrefs)
             // writeToInternalStorage()
             // writeToPrivateExternalStorage()
-            writeToPublicExternalStorage()
+            // writeToPublicExternalStorage()
+
+            Thread {
+                app.db.photoDao().create(
+                    MyPhoto(1, "Pic at office", "Walkig", "me")
+                )
+            }.start()
         }
     }
 
@@ -66,8 +80,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun writeToPrivateExternalStorage() {
         val rootFile = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+
         val file = File(rootFile, "my.txt")
-        Log.i("@codekul", "Path to private external storage is ${file.absolutePath} ")
+        Log.i("@codekul", "Path to private external storage is ${file.absolutePath}")
         file.bufferedWriter().use { bw -> bw.write("This data to external storage") }
     }
 
@@ -96,4 +111,5 @@ class MainActivity : AppCompatActivity() {
         Log.i("@codekul", "External Storage Data is - $data")
 
     }
+
 }
