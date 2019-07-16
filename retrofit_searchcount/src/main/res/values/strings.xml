@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">retrofit_searchcount</string>
+    <string name="hint_search_string">Search</string>
+    <string name="button_search">button_search</string>
+</resources>
