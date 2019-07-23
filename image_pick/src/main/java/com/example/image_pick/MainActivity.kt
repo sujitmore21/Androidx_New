@@ -3,6 +3,7 @@ package com.example.image_pick
 import android.content.Intent
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -11,6 +12,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import java.io.ByteArrayOutputStream
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         btn = findViewById<View>(R.id.btn) as Button
         imageview = findViewById<View>(R.id.iv) as ImageView
 
-        btn!!.setOnClickListener { showPictureDialog() }
+        btn!!.setOnClickListener { showPictureDialog()}
 
     }
 
@@ -41,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         val pictureDialog = AlertDialog.Builder(this)
         pictureDialog.setTitle("Select Action")
         val pictureDialogItems = arrayOf("Select photo from gallery", "Capture photo from camera")
+        Permissions.checkAndRequestPermissions(this@MainActivity)
         pictureDialog.setItems(pictureDialogItems
         ) { dialog, which ->
             when (which) {
@@ -63,6 +66,7 @@ class MainActivity : AppCompatActivity() {
         startActivityForResult(intent, CAMERA)
     }
 
+    @RequiresApi(Build.VERSION_CODES.FROYO)
     public override fun onActivityResult(requestCode:Int, resultCode:Int, data: Intent?) {
 
         super.onActivityResult(requestCode, resultCode, data)
@@ -100,6 +104,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.FROYO)
     fun saveImage(myBitmap: Bitmap):String {
         val bytes = ByteArrayOutputStream()
         myBitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes)
